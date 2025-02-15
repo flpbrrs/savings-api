@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "@jest/globals"
 import RegistrarUsuario from '../../src/core/auth/services/registrarUsuario'
 import InMemoryUserRepository from "../../src/adapters/db/InMemoryUserRepository"
-import InvertDataEncrypter from '../../src/adapters/auth/InvertDataEncrypter'
+import BcryptDataEncrypter from '../../src/adapters/auth/BcryptDataEncrypter'
 
 describe('Casos de uso: Autenticação', () => {
     let registerUseCase: RegistrarUsuario
@@ -9,11 +9,13 @@ describe('Casos de uso: Autenticação', () => {
     beforeAll(() => {
         registerUseCase = new RegistrarUsuario(
             new InMemoryUserRepository(),
-            new InvertDataEncrypter()
+            new BcryptDataEncrypter()
         )
     });
 
     it('Deve registrar um usuários', () => {
+        let bcryptAdapter = new BcryptDataEncrypter()
+
         const user = registerUseCase.execute({
             name: "Felipe Jonathan",
             email: "felipe@fmail.com",
@@ -23,7 +25,7 @@ describe('Casos de uso: Autenticação', () => {
         expect(user).toHaveProperty('id')
         expect(user.name).toBe("Felipe Jonathan")
         expect(user.email).toBe("felipe@fmail.com")
-        expect(user.senha).toBe("654321")
+        expect(bcryptAdapter.compare("123456", user.senha)).toBeTruthy()
     });
 
     it('Deve gerar erro ao passar parâmetros insuficientes para criação do usuário', () => {
