@@ -8,7 +8,7 @@ export default class RegistrarUsuario {
         private readonly encrypter: DataEncrypter
     ) { }
 
-    execute({ name, email, senha }: Partial<User>): User {
+    async execute({ name, email, senha }: Partial<User>): Promise<User> {
         if (!name || !email || !senha) {
             throw new Error(
                 "Informações insuficientes para criação de um usuário"
@@ -17,8 +17,7 @@ export default class RegistrarUsuario {
 
         const encryptedSenha = this.encrypter.encrypt(senha)
 
-        let newUser = this.repository.insert({
-            id: String(Math.random()),
+        let newUser = await this.repository.insert({
             name: name,
             email: email,
             senha: encryptedSenha
