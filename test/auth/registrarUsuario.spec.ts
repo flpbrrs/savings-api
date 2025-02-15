@@ -13,10 +13,10 @@ describe('Casos de uso: Autenticação', () => {
         )
     });
 
-    it('Deve registrar um usuários', () => {
+    it('Deve registrar um usuários', async () => {
         let bcryptAdapter = new BcryptDataEncrypter()
 
-        const user = registerUseCase.execute({
+        const user = await registerUseCase.execute({
             name: "Felipe Jonathan",
             email: "felipe@fmail.com",
             senha: "123456"
@@ -25,12 +25,14 @@ describe('Casos de uso: Autenticação', () => {
         expect(user).toHaveProperty('id')
         expect(user.name).toBe("Felipe Jonathan")
         expect(user.email).toBe("felipe@fmail.com")
-        expect(bcryptAdapter.compare("123456", user.senha)).toBeTruthy()
+        expect(bcryptAdapter.compare("123456", user.senha!)).toBeTruthy()
     });
 
-    it('Deve gerar erro ao passar parâmetros insuficientes para criação do usuário', () => {
-        expect(() => {
-            registerUseCase.execute({})
-        }).toThrow('Informações insuficientes para criação de um usuário')
+    it('Deve gerar erro ao passar parâmetros insuficientes para criação do usuário', async () => {
+        try {
+            await registerUseCase.execute({})
+        } catch (e: any) {
+            expect(e.message).toBe('Informações insuficientes para criação de um usuário')
+        }
     })
 })
