@@ -28,28 +28,26 @@ describe('Casos de uso: Login', () => {
     })
 
     it('Deve gerar um token com o login do usuário', async () => {
-        const token = await loginUseCase.execute(
-            "felipe@fmail.com",
-            "123456"
-        )
+        const response = await loginUseCase.execute({
+            email: "felipe@fmail.com",
+            senha: "123456"
+        })
 
-        const userDecoded = new JWTTokenGenerator().decode(token) as {
-            id: string,
-            email: string,
+        const userDecoded = new JWTTokenGenerator().decode(response.token) as {
             iat: number,
             exp: number
         }
 
-        expect(token).toBeDefined()
-        expect(userDecoded.email).toBe('felipe@fmail.com')
+        expect(response.token).toBeDefined()
+        expect(response.usuario.email).toBe('felipe@fmail.com')
     })
 
     it('Deve gerar erro ao tentar login com e-mail errado', async () => {
         expect(async () => {
-            await loginUseCase.execute(
-                'usertest@umail.com',
-                '123456'
-            )
+            await loginUseCase.execute({
+                email: 'usertest@umail.com',
+                senha: '123456'
+            })
         }).rejects.toThrowError('Credenciais inválidas')
     })
 })

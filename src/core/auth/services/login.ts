@@ -1,24 +1,38 @@
+import CasoDeUso from "../../shared/model/CasoDeUso";
 import DataEncrypter from "../providers/DataEncrypter";
-import { TokenGenerator } from "../providers/TokenGenerator";
 import UserRepository from "../providers/UserRepository";
+import { TokenGenerator } from "../providers/TokenGenerator";
+import { User } from "../model/User";
 
-export default class Login {
+export type Entrada = {
+    email: string,
+    senha: string
+}
+
+export type Saida = {
+    usuario: User,
+    token: string
+}
+
+export default class Login implements CasoDeUso<Entrada, Saida> {
     constructor(
         private readonly repository: UserRepository,
         private readonly encrypter: DataEncrypter,
         private readonly tokenGenerator: TokenGenerator
     ) { }
 
-    async execute(email: string, senha: string) {
+    async execute({ email, senha }: Entrada): Promise<Saida> {
         const user = await this.repository.findByEmail(email)
 
         if (!user || !this.encrypter.compare(senha, user.senha!)) {
             throw new Error('Credenciais inválidas')
         }
 
-        return this.tokenGenerator.sign(
-            { id: user.id, email: user.email },
-            { expiresIn: '1d' }
-        )
+        const token = this.tokenGenerator.sign({}, { expiresIn: '1d' })
+
+        return {
+            usuario: { ...user, senha: undefined },
+            token
+        }
     }
 }

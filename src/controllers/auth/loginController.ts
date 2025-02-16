@@ -10,10 +10,10 @@ export class loginController {
         app.post('/login', async (request, response) => {
             try {
                 const { email, senha } = request.body
-                const token = await casoDeUso.execute(email, senha)
+                const result = await casoDeUso.execute({ email, senha })
 
                 response.status(200).json({
-                    data: { token }
+                    data: { ...result }
                 })
             } catch (e: any) {
                 response.status(401).json({
