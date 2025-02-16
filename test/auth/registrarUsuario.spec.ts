@@ -39,7 +39,7 @@ describe('Casos de uso: Registrar usuário', () => {
     })
 
     it('Deve gerar erro ao passar parâmetros insuficientes para criação do usuário', async () => {
-        expect(async () => await registerUseCase.execute({}))
+        expect(async () => await registerUseCase.execute({} as any))
             .rejects
             .toThrowError("Informações insuficientes para criação de um usuário")
     })
