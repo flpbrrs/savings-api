@@ -8,7 +8,7 @@ export default class PrismaUserRepository implements UserRepository {
     async insert(user: Partial<User>): Promise<User> {
         return await this.prisma.user.create({
             data: {
-                name: user.name!,
+                nome: user.nome!,
                 email: user.email!,
                 senha: user.senha!
             }
