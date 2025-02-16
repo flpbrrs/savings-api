@@ -1,3 +1,4 @@
+import { Id } from "../../shared/model/id";
 import { User } from "../model/User";
 import DataEncrypter from "../providers/DataEncrypter";
 import UserRepository from "../providers/UserRepository";
@@ -18,6 +19,7 @@ export default class RegistrarUsuario {
         const encryptedSenha = this.encrypter.encrypt(senha)
 
         let newUser = await this.repository.insert({
+            id: Id.generate(),
             name: name,
             email: email,
             senha: encryptedSenha
