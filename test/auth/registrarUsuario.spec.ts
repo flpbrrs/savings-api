@@ -29,22 +29,18 @@ describe('Casos de uso: Registrar usuário', () => {
     });
 
     it('Deve gerar erro ao tentar registar um usuário com email em uso', async () => {
-        try {
+        expect(async () => {
             await registerUseCase.execute({
                 name: "Felipe Jonathan",
                 email: "felipe@fmail.com",
                 senha: "123456"
             })
-        } catch (e: any) {
-            expect(e.message).toBe('E-mail já cadastrado')
-        }
+        }).rejects.toThrowError("E-mail já cadastrado")
     })
 
     it('Deve gerar erro ao passar parâmetros insuficientes para criação do usuário', async () => {
-        try {
-            await registerUseCase.execute({})
-        } catch (e: any) {
-            expect(e.message).toBe('Informações insuficientes para criação de um usuário')
-        }
+        expect(async () => await registerUseCase.execute({}))
+            .rejects
+            .toThrowError("Informações insuficientes para criação de um usuário")
     })
 })
