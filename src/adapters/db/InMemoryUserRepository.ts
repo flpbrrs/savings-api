@@ -15,4 +15,10 @@ export default class InMemoryUserRepository implements UserRepository {
         InMemoryUserRepository.data.push(newUser)
         return newUser
     }
+
+    async findByEmail(email: string): Promise<User | null> {
+        return InMemoryUserRepository.data.find((user: User) => (
+            user.email === email
+        )) ?? null
+    }
 }
