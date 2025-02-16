@@ -7,7 +7,7 @@ export default class InMemoryUserRepository implements UserRepository {
     async insert(user: Partial<User>): Promise<User> {
         const newUser: User = {
             id: String(Math.random()),
-            name: user.name!,
+            nome: user.nome!,
             email: user.email!,
             senha: user.senha!
         }

@@ -17,13 +17,13 @@ describe('Casos de uso: Registrar usuário', () => {
         let bcryptAdapter = new BcryptDataEncrypter()
 
         const user = await registerUseCase.execute({
-            name: "Felipe Jonathan",
+            nome: "Felipe Jonathan",
             email: "felipe@fmail.com",
             senha: "123456"
         })
 
         expect(user).toHaveProperty('id')
-        expect(user.name).toBe("Felipe Jonathan")
+        expect(user.nome).toBe("Felipe Jonathan")
         expect(user.email).toBe("felipe@fmail.com")
         expect(bcryptAdapter.compare("123456", user.senha!)).toBeTruthy()
     });
@@ -31,7 +31,7 @@ describe('Casos de uso: Registrar usuário', () => {
     it('Deve gerar erro ao tentar registar um usuário com email em uso', async () => {
         expect(async () => {
             await registerUseCase.execute({
-                name: "Felipe Jonathan",
+                nome: "Felipe Jonathan",
                 email: "felipe@fmail.com",
                 senha: "123456"
             })
