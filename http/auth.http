@@ -1,0 +1,11 @@
+@BASE_URL = http://localhost:4000
+
+### Registrar usuário
+POST {{BASE_URL}}/register
+Content-Type: application/json
+
+{
+    "nome": "Felipe Jonathan",
+    "email": "felipe@fmail.com",
+    "senha": "123456"
+}
