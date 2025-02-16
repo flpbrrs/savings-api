@@ -3,7 +3,7 @@ import RegistrarUsuario from '../../src/core/auth/services/registrarUsuario'
 import InMemoryUserRepository from "../../src/adapters/db/InMemoryUserRepository"
 import BcryptDataEncrypter from '../../src/adapters/auth/BcryptDataEncrypter'
 
-describe('Casos de uso: Autenticação', () => {
+describe('Casos de uso: Registrar usuário', () => {
     let registerUseCase: RegistrarUsuario
 
     beforeAll(() => {
@@ -13,7 +13,7 @@ describe('Casos de uso: Autenticação', () => {
         )
     });
 
-    it('Deve registrar um usuários', async () => {
+    it('Deve registrar um usuário', async () => {
         let bcryptAdapter = new BcryptDataEncrypter()
 
         const user = await registerUseCase.execute({
@@ -27,6 +27,18 @@ describe('Casos de uso: Autenticação', () => {
         expect(user.email).toBe("felipe@fmail.com")
         expect(bcryptAdapter.compare("123456", user.senha!)).toBeTruthy()
     });
+
+    it('Deve gerar erro ao tentar registar um usuário com email em uso', async () => {
+        try {
+            await registerUseCase.execute({
+                name: "Felipe Jonathan",
+                email: "felipe@fmail.com",
+                senha: "123456"
+            })
+        } catch (e: any) {
+            expect(e.message).toBe('E-mail já cadastrado')
+        }
+    })
 
     it('Deve gerar erro ao passar parâmetros insuficientes para criação do usuário', async () => {
         try {

@@ -16,6 +16,14 @@ export default class RegistrarUsuario {
             )
         }
 
+        const userAlreadyExists = await this.repository.findByEmail(email)
+
+        if (userAlreadyExists) {
+            throw new Error(
+                "E-mail já cadastrado"
+            )
+        }
+
         const encryptedSenha = this.encrypter.encrypt(senha)
 
         let newUser = await this.repository.insert({
