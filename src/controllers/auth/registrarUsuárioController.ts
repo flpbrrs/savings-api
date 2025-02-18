@@ -7,7 +7,7 @@ export class registrarUsuarioController {
         private readonly casoDeUso: RegistrarUsuario,
         ...middlewares: any[]
     ) {
-        app.post('/register', async (request, response) => {
+        app.post('/register', ...middlewares, async (request, response) => {
             try {
                 const { nome, email, senha } = request.body
                 const newUser = await casoDeUso.execute({

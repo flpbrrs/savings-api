@@ -1,20 +1,25 @@
-@BASE_URL = http://localhost:4000
-
-### Registrar usuário
-POST {{BASE_URL}}/register
-Content-Type: application/json
-
-{
-    "nome": "Felipe Jonathan",
-    "email": "felipe@fmail.com",
-    "senha": "123456"
-}
+@BASE_URL = http://localhost:5000
 
 ### Login
+# @name postLogin
 POST {{BASE_URL}}/login
 Content-Type: application/json
 
 {
     "email": "felipe@fmail.com",
+    "senha": "123456"
+}
+
+### Salvando token em uma variável
+@token = {{postLogin.response.body.data.token}}
+
+### Registrar usuário
+POST {{BASE_URL}}/register
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "nome": "Felipe Jonathan",
+    "email": "felipe2@fmail.com",
     "senha": "123456"
 }
