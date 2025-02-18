@@ -12,7 +12,7 @@ describe('Casos de uso: Login', () => {
         loginUseCase = new Login(
             new InMemoryUserRepository(),
             new BcryptDataEncrypter(),
-            new JWTTokenGenerator()
+            new JWTTokenGenerator(process.env.API_SECRET!)
         )
 
         await new RegistrarUsuario(
@@ -33,7 +33,7 @@ describe('Casos de uso: Login', () => {
             senha: "123456"
         })
 
-        const userDecoded = new JWTTokenGenerator().decode(response.token) as {
+        const userDecoded = new JWTTokenGenerator(process.env.API_SECRET!).decode(response.token) as {
             iat: number,
             exp: number
         }

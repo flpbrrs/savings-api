@@ -10,7 +10,7 @@ import RegistrarUsuario from "./core/auth/services/registrarUsuario";
 (async () => {
     const userRepository = new PrismaUserRepository()
     const dataEncrypter = new BcryptDataEncrypter()
-    const jwtProvider = new JWTTokenGenerator()
+    const jwtProvider = new JWTTokenGenerator(process.env.API_SECRET!)
 
     new registrarUsuarioController(app, new RegistrarUsuario(
         userRepository,

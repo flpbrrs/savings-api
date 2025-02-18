@@ -2,18 +2,17 @@ import jwt from 'jsonwebtoken'
 import { TokenGenerator } from "../../core/auth/providers/TokenGenerator";
 
 export default class JWTTokenGenerator implements TokenGenerator {
-    private readonly SECRET = process.env.API_SECRET!
 
-    constructor() {
-        if (!this.SECRET)
+    constructor(private readonly secret: string) {
+        if (!this.secret)
             throw new Error('Defina o secret')
     }
 
-    sign(data: any, options?: any): string {
-        return jwt.sign(data, this.SECRET, options)
+    sign(data: string | object): string {
+        return jwt.sign(data, this.secret, { expiresIn: '1d' })
     }
 
-    decode(token: string) {
-        return jwt.verify(token, this.SECRET!)
+    decode(token: string): string | object {
+        return jwt.verify(token, this.secret)
     }
 }

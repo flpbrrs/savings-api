@@ -28,7 +28,11 @@ export default class Login implements CasoDeUso<Entrada, Saida> {
             throw new Error('Credenciais inválidas')
         }
 
-        const token = this.tokenGenerator.sign({}, { expiresIn: '1d' })
+        const token = this.tokenGenerator.sign({
+            id: user.id,
+            nome: user.nome,
+            email: user.email
+        })
 
         return {
             usuario: { ...user, senha: undefined },
