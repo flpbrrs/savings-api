@@ -25,7 +25,7 @@ export default class Login implements CasoDeUso<Entrada, Saida> {
         const user = await this.repository.findByEmail(email)
 
         if (!user || !this.encrypter.compare(senha, user.senha!)) {
-            throw new Error('Credenciais inválidas')
+            throw new Error('Credenciais inválidas. Verifique seu e-mail e senha.')
         }
 
         const token = this.tokenGenerator.sign({

@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ### Salvando token em uma variável
-@token = {{postLogin.response.body.data.token}}
+@token = {{postLogin.response.body.token}}
 
 ### Registrar usuário
 POST {{BASE_URL}}/register

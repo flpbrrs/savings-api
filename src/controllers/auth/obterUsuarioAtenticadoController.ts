@@ -5,7 +5,7 @@ export class ObterUsuarioAutenticadoController {
         private readonly app: Express,
         ...middlewares: any[]
     ) {
-        app.post('/me', ...middlewares, async (request, response) => {
+        app.get('/me', ...middlewares, async (request, response) => {
             response.status(200).json({
                 usuario: { ...request.user, senha: undefined }
             })

@@ -12,9 +12,7 @@ export class loginController {
                 const { email, senha } = request.body
                 const result = await casoDeUso.execute({ email, senha })
 
-                response.status(200).json({
-                    data: { ...result }
-                })
+                response.status(200).json(result)
             } catch (e: any) {
                 response.status(401).json({
                     erros: e.message
