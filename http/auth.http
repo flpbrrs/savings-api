@@ -1,4 +1,4 @@
-@BASE_URL = http://localhost:5000
+@BASE_URL = http://localhost:4000
 
 ### Login
 # @name postLogin
@@ -23,3 +23,7 @@ Authorization: Bearer {{token}}
     "email": "felipe2@fmail.com",
     "senha": "123456"
 }
+
+### me
+POST {{BASE_URL}}/me
+Authorization: Bearer {{token}}

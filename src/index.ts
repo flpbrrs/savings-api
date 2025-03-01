@@ -4,6 +4,7 @@ import JWTTokenGenerator from "./adapters/auth/JWTTokenGenerator";
 import PrismaUserRepository from "./adapters/db/PrismaUserRepository";
 import AuthMiddleware from "./controllers/auth/auth.middleware";
 import { loginController } from "./controllers/auth/loginController";
+import { ObterUsuarioAutenticadoController } from "./controllers/auth/obterUsuarioAtenticadoController";
 import { registrarUsuarioController } from "./controllers/auth/registrarUsuárioController";
 import Login from "./core/auth/services/login";
 import RegistrarUsuario from "./core/auth/services/registrarUsuario";
@@ -18,6 +19,8 @@ import RegistrarUsuario from "./core/auth/services/registrarUsuario";
 
     const authMiddleware = AuthMiddleware(userRepository, jwtProvider)
 
-    new registrarUsuarioController(app, RegistrarUsuárioUseCase, authMiddleware)
+    new registrarUsuarioController(app, RegistrarUsuárioUseCase)
     new loginController(app, loginUsuarioUserCase)
+
+    new ObterUsuarioAutenticadoController(app, authMiddleware)
 })()
