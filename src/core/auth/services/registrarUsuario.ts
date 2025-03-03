@@ -40,6 +40,6 @@ export default class RegistrarUsuario implements CasoDeUso<Entrada, User> {
             senha: encryptedSenha
         })
 
-        return newUser
+        return { ...newUser, senha: undefined }
     }
 }

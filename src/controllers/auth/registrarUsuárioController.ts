@@ -14,7 +14,7 @@ export class registrarUsuarioController {
                     nome, email, senha
                 })
                 response.status(201).json({
-                    data: newUser
+                    usuario: newUser
                 })
             } catch (e: any) {
                 response.status(400).json({
