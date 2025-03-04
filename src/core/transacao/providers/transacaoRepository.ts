@@ -3,7 +3,6 @@ import Transacao from "../model/Transacao";
 
 export default interface TransacaoRepository {
     salvar(transacao: Transacao): Promise<void>
-    gerarExtrato(userId: string): Promise<Transacao[]>
-    gerarResumo(userId: string): Promise<Resumo>
+    findByDate(userId: string, mes: number, ano: number): Promise<Transacao[]>
     findById(transactionId: string): Promise<Transacao | null>
 }

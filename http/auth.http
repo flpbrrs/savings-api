@@ -33,11 +33,11 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "titulo": "Pagar cartão",
-    "descricao": "contas",
-    "valor": 900,
-    "data": "2025-03-15",
-    "tipo": "expense"
+    "titulo": "Segunda quinzena - Março",
+    "descricao": "Salário",
+    "valor": 810,
+    "data": "2025-03-30",
+    "tipo": "income"
 }
 
 ### Atualizar transacao
@@ -54,9 +54,5 @@ Content-Type: application/json
 }
 
 ### Obter extrato
-GET {{BASE_URL}}/transaction
-Authorization: Bearer {{token}}
-
-### Obter resumo
-GET {{BASE_URL}}/transaction/resume
+GET {{BASE_URL}}/transaction/3/2025
 Authorization: Bearer {{token}}
