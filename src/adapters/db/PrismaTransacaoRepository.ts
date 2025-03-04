@@ -18,11 +18,66 @@ export default class PrismaTransacaoRepository implements TransacaoRepository {
     }
 
     async gerarExtrato(userId: string): Promise<Transacao[]> {
-        throw new Error("Method not implemented.");
+        const transacoes = await this.prisma.transaction.findMany({
+            where: { userId }
+        })
+
+        return transacoes.map(this.toTransacao)
     }
 
     async gerarResumo(userId: string): Promise<Resumo> {
-        throw new Error("Method not implemented.");
+        const [totals, analytics] = await Promise.all([
+            await this.prisma.transaction.groupBy({
+                by: ['userId', 'tipo'],
+                _sum: { valor: true },
+                where: { userId }
+            }).then(result => (
+                result.reduce((acc: any, item) => {
+                    acc[item.tipo] = Number(item._sum.valor);
+                    return acc;
+                }, {})
+            )),
+            await this.prisma.transaction.groupBy({
+                by: ['descricao'],
+                _sum: { valor: true },
+                where: { userId, tipo: 'expense' }
+            }).then(result =>
+                result.reduce((acc: any, item) => {
+                    const label = item.descricao.toLowerCase();
+                    acc[label] = (acc[label] || 0) + Number(item._sum.valor);
+                    return acc;
+                }, {})
+            )
+        ])
+
+        // const totals = await this.prisma.transaction.groupBy({
+        //     by: ['userId', 'tipo'],
+        //     _sum: { valor: true },
+        //     where: { userId }
+        // }).then(result => (
+        //     result.reduce((acc: any, item) => {
+        //         acc[item.tipo] = Number(item._sum.valor);
+        //         return acc;
+        //     }, {})
+        // ))
+
+        // const analytics = await this.prisma.transaction.groupBy({
+        //     by: ['descricao'],
+        //     _sum: { valor: true },
+        //     where: { userId, tipo: 'expense' }
+        // }).then(result =>
+        //     result.reduce((acc: any, item) => {
+        //         const label = item.descricao.toLowerCase();
+        //         acc[label] = (acc[label] || 0) + Number(item._sum.valor);
+        //         return acc;
+        //     }, {})
+        // );
+
+        return {
+            income: totals.income ?? 0,
+            expense: totals.expense ?? 0,
+            analytics
+        }
     }
 
     async findById(transactionId: string): Promise<Transacao | null> {
@@ -45,7 +100,7 @@ export default class PrismaTransacaoRepository implements TransacaoRepository {
     private toTransacao(transacao: Transaction): Transacao {
         return {
             ...transacao,
-            valor: Number(transacao.valor)
+            valor: Number(transacao.valor),
         }
     }
 }

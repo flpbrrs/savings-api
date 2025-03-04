@@ -33,21 +33,30 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "titulo": "Primeira quinzena",
-    "valor": 330.70,
+    "titulo": "Pagar cartão",
+    "descricao": "contas",
+    "valor": 900,
     "data": "2025-03-15",
-    "tipo": "income"
+    "tipo": "expense"
 }
 
 ### Atualizar transacao
-PUT {{BASE_URL}}/transaction/54d11970-7a22-4723-ac1f-6dbc79dc4b03
+PUT {{BASE_URL}}/transaction/710a380b-2403-48ec-8feb-df8d07c12d89
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "titulo": "Primeira quinzena Março",
-    "descricao": "Salário",
-    "valor": 450,
-    "data": "2025-03-15",
-    "tipo": "income"
+    "titulo": "Pagar internet",
+    "descricao": "Contas",
+    "valor": 120.91,
+    "data": "2025-03-11",
+    "tipo": "expense"
 }
+
+### Obter extrato
+GET {{BASE_URL}}/transaction
+Authorization: Bearer {{token}}
+
+### Obter resumo
+GET {{BASE_URL}}/transaction/resume
+Authorization: Bearer {{token}}
