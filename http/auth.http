@@ -16,14 +16,38 @@ Content-Type: application/json
 ### Registrar usuário
 POST {{BASE_URL}}/register
 Content-Type: application/json
-Authorization: Bearer {{token}}
 
 {
     "nome": "Felipe Jonathan",
-    "email": "felipe2@fmail.com",
+    "email": "felipe@fmail.com",
     "senha": "123456"
 }
 
 ### me
-POST {{BASE_URL}}/me
+GET {{BASE_URL}}/me
 Authorization: Bearer {{token}}
+
+### Nova transacao
+POST {{BASE_URL}}/transaction
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "titulo": "Primeira quinzena",
+    "valor": 330.70,
+    "data": "2025-03-15",
+    "tipo": "income"
+}
+
+### Atualizar transacao
+PUT {{BASE_URL}}/transaction/54d11970-7a22-4723-ac1f-6dbc79dc4b03
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "titulo": "Primeira quinzena Março",
+    "descricao": "Salário",
+    "valor": 450,
+    "data": "2025-03-15",
+    "tipo": "income"
+}
