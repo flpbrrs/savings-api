@@ -4,5 +4,6 @@ module.exports = {
   transform: {
     "^.+.tsx?$": ["ts-jest", {}],
   },
-  setupFiles: ['<rootDir>/test/.env.ts']
+  setupFiles: ['<rootDir>/test/.env.ts'],
+  collectCoverage: true
 };
