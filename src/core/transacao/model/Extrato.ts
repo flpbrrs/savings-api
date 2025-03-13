@@ -32,13 +32,16 @@ export default class Extrato {
     }
 
     get analysis(): { label: string, total: number }[] {
-        return this.transacoes
+        const partialAnalysis = this.transacoes
             .filter(transacao => transacao.tipo === 'expense')
-            .reduce((acc: any, item) => {
+            .reduce((acc, item) => {
                 const label = item.descricao.toLowerCase();
-                acc[label] = (acc[label] || 0) + Number(item.valor);
+                acc[label] = (acc[label] || 0) + item.valor;
                 return acc;
-            }, {})
+            }, {} as Record<string, number>);
+
+        return Object.entries(partialAnalysis)
+            .map(([label, value]) => ({ label, total: value }))
     }
 
     private totalize(total: number, transacao: Transacao): number {
