@@ -1,14 +1,29 @@
 import CoreError from "../shared/model/CoreError.error";
 
 export default class Validator {
-    static combine(...errors: (CoreError | null)[]): CoreError[] | null {
-        const coerErrors = errors.filter(
+    static combine(...errors: (CoreError | null)[]): CoreError | null {
+        const filteredErrors = errors.filter(
             (error) => error !== null
         ) as CoreError[]
 
-        return coerErrors.length > 0
-            ? coerErrors
-            : null
+        if (filteredErrors.length === 0) return null
+
+        const groupedErrors: Record<string, string[]> = {}
+
+        filteredErrors.forEach(error => {
+            const [prefix, ...rest] = error.code!.split('.')
+
+            if (!groupedErrors[prefix])
+                groupedErrors[prefix] = []
+
+            groupedErrors[prefix].push(rest.join('.'))
+        })
+
+        const combinedCode = Object.entries(groupedErrors)
+            .map(([prefix, codes]) => `${prefix}.${codes.join('.')}`)
+            .join(',');
+
+        return new CoreError({ code: combinedCode });
     }
 
     static notNull(value: any, error: string): CoreError | null {

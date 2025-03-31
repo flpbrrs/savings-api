@@ -125,9 +125,7 @@ describe("Util: Validator", () => {
             Validator.lengthGreaterThan("", 4, "person-name.too-short"),
         )
 
-        expect(errors).toHaveLength(2)
-        expect(errors![0]).toBeInstanceOf(CoreError)
-        expect(errors![1]).toBeInstanceOf(CoreError)
+        expect(errors?.code).toBe('person-name.empty.too-short')
     })
 
     it("Deve retornar nulo em casos sem errors", () => {
