@@ -6,7 +6,18 @@ describe("Entity: User", () => {
         const user = new User({
             name: "Felipe Jonathan",
             email: "felipe@fmail.com",
-            password: "!SenhaForte123"
+            password: "$2a$08$BXiml0an1MG9lZ/5Tcm1sO1Kl1QMttGxd0Eba9DtTRJkTe9BzY/L6"
+        })
+
+        expect(user.id).toBeDefined()
+        expect(user.name.firstName).toBe("Felipe")
+        expect(user.email.user).toBe("felipe")
+    })
+
+    it("Deve criar um usuário sem senha", () => {
+        const user = new User({
+            name: "Felipe Jonathan",
+            email: "felipe@fmail.com"
         })
 
         expect(user.id).toBeDefined()
