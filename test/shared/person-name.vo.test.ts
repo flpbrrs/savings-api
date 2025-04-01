@@ -13,7 +13,7 @@ describe("Value Object: Person name", () => {
     })
 
     it("Deve gerar erro ao tentar criar nome inválido", () => {
-        const nameError = new PersonName("")
+        const nameError = new PersonName()
 
         expect(nameError.validate()).toBeInstanceOf(CoreError)
         expect(nameError.validate()?.code)
