@@ -2,31 +2,31 @@ import CasoDeUso from "../../shared/model/CasoDeUso";
 import DataEncrypter from "../providers/DataEncrypter";
 import UserRepository from "../providers/UserRepository";
 import { TokenGenerator } from "../providers/TokenGenerator";
-import { User } from "../model/User";
+import User, { UserProps } from "../model/user.entity";
+import CoreError from "../../shared/model/CoreError.error";
 
-export type Entrada = {
+export type Input = {
     email: string,
     senha: string
 }
 
-export type Saida = {
-    usuario: User,
+export type Output = {
+    usuario: UserProps,
     token: string
 }
 
-export default class Login implements CasoDeUso<Entrada, Saida> {
+export default class Login implements CasoDeUso<Input, Output> {
     constructor(
         private readonly repository: UserRepository,
         private readonly encrypter: DataEncrypter,
         private readonly tokenGenerator: TokenGenerator
     ) { }
 
-    async execute({ email, senha }: Entrada): Promise<Saida> {
+    async execute({ email, senha }: Input): Promise<Output> {
         const user = await this.repository.findByEmail(email)
 
-        if (!user || !this.encrypter.compare(senha, user.senha!)) {
-            throw new Error('Credenciais inválidas. Verifique seu e-mail e senha.')
-        }
+        if (!user || !this.encrypter.compare(senha, user.senha!))
+            throw new CoreError({ code: 'root.invalid-credentials' })
 
         const token = this.tokenGenerator.sign({
             id: user.id,
@@ -35,7 +35,7 @@ export default class Login implements CasoDeUso<Entrada, Saida> {
         })
 
         return {
-            usuario: { ...user, senha: undefined },
+            usuario: new User(user).withoutPassword,
             token
         }
     }
