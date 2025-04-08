@@ -18,10 +18,9 @@ export default class RegistrarUsuario implements CasoDeUso<Input, void> {
     ) { }
 
     async execute({ nome, email, senha }: Input): Promise<void> {
-        const isWeakPassword = new StrongPassword(senha).validate()
+        const isPasswordWeak = new StrongPassword(senha).validate()
 
-        if (isWeakPassword)
-            throw isWeakPassword
+        if (isPasswordWeak) throw isPasswordWeak
 
         const newUser = new User({
             nome,
@@ -32,9 +31,7 @@ export default class RegistrarUsuario implements CasoDeUso<Input, void> {
         const userAlreadyExists = await this.repository.findByEmail(email)
 
         if (userAlreadyExists)
-            throw new CoreError({
-                code: "root.user-already-exists",
-            })
+            throw new CoreError({ code: "root.user-already-exists" })
 
         await this.repository.insert(newUser.props)
     }
