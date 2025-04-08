@@ -8,15 +8,15 @@ export default class PrismaUserRepository implements UserRepository {
     async insert(user: UserProps): Promise<void> {
         await this.prisma.user.create({
             data: {
-                nome: user.name!,
+                nome: user.nome!,
                 email: user.email!,
-                senha: user.password!
+                senha: user.senha!
             }
         })
     }
 
     async findByEmail(email: string): Promise<UserProps | null> {
-        return this.prisma.user.findFirst({
+        return await this.prisma.user.findFirst({
             where: { email }
         })
     }

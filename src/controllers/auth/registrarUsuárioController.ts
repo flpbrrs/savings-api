@@ -1,5 +1,5 @@
 import { Express } from "express";
-import RegistrarUsuario from "../../core/auth/services/registrarUsuario";
+import RegistrarUsuario from "../../core/auth/services/registrar-usuario.use-case";
 
 export class registrarUsuarioController {
     constructor(

@@ -1,5 +1,5 @@
 import { Express } from "express"
-import Login from "../../core/auth/services/login";
+import Login from "../../core/auth/services/login.use-case";
 
 export class loginController {
     constructor(

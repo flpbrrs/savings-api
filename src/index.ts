@@ -9,8 +9,8 @@ import { ObterUsuarioAutenticadoController } from "./controllers/auth/obterUsuar
 import { registrarUsuarioController } from "./controllers/auth/registrarUsuárioController";
 import obterExtratoController from "./controllers/transaction/obterExtratoController";
 import { salvarTransacaoController } from "./controllers/transaction/salvarTransacaoController";
-import Login from "./core/auth/services/login";
-import RegistrarUsuario from "./core/auth/services/registrarUsuario";
+import Login from "./core/auth/services/login.use-case";
+import RegistrarUsuario from "./core/auth/services/registrar-usuario.use-case";
 import ObterExtrato from "./core/transacao/services/obterExtrato";
 import SalvarTransacao from "./core/transacao/services/salvarTransacao";
 

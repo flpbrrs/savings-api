@@ -5,33 +5,37 @@ import Email from "./email.vo";
 import HashPassword from "./hash-password.vo";
 
 export interface UserProps extends EntityProps {
-    name?: string,
+    nome?: string,
     email?: string,
-    password?: string
+    senha?: string
 }
 
 export default class User extends Entity<User, UserProps> {
-    readonly name: PersonName
+    readonly nome: PersonName
     readonly email: Email
-    readonly password?: HashPassword | null
+    readonly senha?: HashPassword | null
 
     constructor(props: UserProps) {
         super(props)
 
-        this.name = new PersonName(props.name)
+        this.nome = new PersonName(props.nome)
         this.email = new Email(props.email)
-        this.password = this.props.password
-            ? new HashPassword(props.password)
+        this.senha = this.props.senha
+            ? new HashPassword(props.senha)
             : null
 
         this.validate()
     }
 
+    get withoutPassword(): UserProps {
+        return { ...this.props, senha: undefined }
+    }
+
     private validate(): void | never {
         const validationErrors = Validator.combine(
-            this.name.validate(),
+            this.nome.validate(),
             this.email.validate(),
-            this.password ? this.password.validate() : null
+            this.senha ? this.senha.validate() : null
         )
 
         if (validationErrors)
