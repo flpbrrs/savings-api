@@ -1,6 +1,6 @@
-import { User } from "../model/User";
+import { UserProps } from "../model/user.entity"
 
 export default interface UserRepository {
-    insert(user: Partial<User>): Promise<User>
-    findByEmail(email: string): Promise<User | null>
+    insert(user: UserProps): Promise<void>
+    findByEmail(email: string): Promise<UserProps | null>
 }
