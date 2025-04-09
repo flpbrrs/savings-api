@@ -3,9 +3,9 @@ import NonNegative from "../../src/core/shared/model/non-negative.vo"
 
 describe("Value Object: Non Negative", () => {
     it("Deve criar um número não negativo", () => {
-        const number = new NonNegative()
+        const number = new NonNegative(10)
 
-        expect(number.value).toBe(0)
+        expect(number.value).toBe(10)
         expect(number.validate()).toBeNull()
     })
 

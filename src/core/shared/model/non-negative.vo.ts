@@ -2,7 +2,7 @@ import Validator from "../../utils/Validator.util"
 
 export default class NonNegative {
     constructor(readonly value?: number) {
-        this.value = value ?? 0
+        this.value = value ?? -1
     }
 
     validate(atribute: string = "number") {
