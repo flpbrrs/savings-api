@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it } from '@jest/globals'
-import Login from '../../src/core/auth/services/login'
+import Login from '../../src/core/auth/services/login.use-case'
 import BcryptDataEncrypter from '../../src/adapters/auth/BcryptDataEncrypter'
 import JWTTokenGenerator from '../../src/adapters/auth/JWTTokenGenerator'
 import InMemoryUserRepository from '../../src/adapters/db/InMemoryUserRepository'
-import RegistrarUsuario from '../../src/core/auth/services/registrarUsuario'
+import RegistrarUsuario from '../../src/core/auth/services/registrar-usuario.use-case'
 
 describe('Casos de uso: Login', () => {
     let loginUseCase: Login
@@ -22,7 +22,7 @@ describe('Casos de uso: Login', () => {
             {
                 nome: "Felipe Barros",
                 email: "felipe@fmail.com",
-                senha: "123456"
+                senha: "!SenhaForte123"
             }
         )
     })
@@ -30,7 +30,7 @@ describe('Casos de uso: Login', () => {
     it('Deve gerar um token com o login do usuário', async () => {
         const response = await loginUseCase.execute({
             email: "felipe@fmail.com",
-            senha: "123456"
+            senha: "!SenhaForte123"
         })
 
         const userDecoded = new JWTTokenGenerator(process.env.API_SECRET!).decode(response.token) as {
@@ -46,8 +46,8 @@ describe('Casos de uso: Login', () => {
         expect(async () => {
             await loginUseCase.execute({
                 email: 'usertest@umail.com',
-                senha: '123456'
+                senha: '!SenhaForte124'
             })
-        }).rejects.toThrowError('Credenciais inválidas')
+        }).rejects.toThrowError('root.invalid-credentials')
     })
 })
