@@ -1,9 +1,9 @@
 import CasoDeUso from "../../shared/model/CasoDeUso";
-import DataEncrypter from "../providers/DataEncrypter";
-import UserRepository from "../providers/UserRepository";
-import { TokenGenerator } from "../providers/TokenGenerator";
-import { UserProps } from "../model/user.entity";
 import CoreError from "../../shared/model/CoreError.error";
+import { User } from "../model/User";
+import DataEncrypter from "../providers/DataEncrypter";
+import { TokenGenerator } from "../providers/TokenGenerator";
+import UserRepository from "../providers/UserRepository";
 
 export type Input = {
     email: string,
@@ -11,7 +11,7 @@ export type Input = {
 }
 
 export type Output = {
-    usuario: UserProps,
+    usuario: User,
     token: string
 }
 
@@ -30,12 +30,18 @@ export default class Login implements CasoDeUso<Input, Output> {
 
         const token = this.tokenGenerator.sign({
             id: user.id,
-            nome: user.nome,
-            email: user.email
+            nome: user.nome.nome,
+            email: user.email.address
         })
 
+        let userProps = user.withoutPassword
+
         return {
-            usuario: user.withoutPassword,
+            usuario: {
+                id: userProps.id!,
+                nome: userProps.nome!,
+                email: userProps.email!
+            },
             token
         }
     }

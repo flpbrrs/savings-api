@@ -1,4 +1,3 @@
-import { Request } from "express";
 import { User } from "../core/auth/model/User";
 
 declare module "express-serve-static-core" {

@@ -13,7 +13,9 @@ export default function AuthMiddleware(
     tokenProvider: JWTTokenGenerator
 ) {
     return async (request: Request, response: Response, next: NextFunction) => {
-        const AcessoNegado = (message: string) => response.status(403).json({ erro: true, message })
+        const AcessoNegado = (message: string) =>
+            response.status(403).json({ erro: true, message })
+
         try {
             const token = request.headers['authorization']?.replace('Bearer ', '')
             if (!token) {
@@ -38,10 +40,11 @@ export default function AuthMiddleware(
                 return;
             }
 
-            (request as any).user = user
+            (request as any).user = user.props
 
             next()
         } catch (e: any) {
+            console.log(e)
             AcessoNegado('Usuário não autorizado')
         }
     }
