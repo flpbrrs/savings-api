@@ -1,14 +1,15 @@
 import { beforeAll, describe, expect, it } from "@jest/globals"
-import RegistrarUsuario from '../../src/core/auth/services/registrarUsuario'
+import RegistrarUsuario from '../../src/core/auth/services/registrar-usuario.use-case'
 import InMemoryUserRepository from "../../src/adapters/db/InMemoryUserRepository"
 import BcryptDataEncrypter from '../../src/adapters/auth/BcryptDataEncrypter'
 
 describe('Casos de uso: Registrar usuário', () => {
     let registerUseCase: RegistrarUsuario
+    let memory = new InMemoryUserRepository()
 
     beforeAll(() => {
         registerUseCase = new RegistrarUsuario(
-            new InMemoryUserRepository(),
+            memory,
             new BcryptDataEncrypter()
         )
     });
@@ -16,16 +17,18 @@ describe('Casos de uso: Registrar usuário', () => {
     it('Deve registrar um usuário', async () => {
         let bcryptAdapter = new BcryptDataEncrypter()
 
-        const user = await registerUseCase.execute({
+        await registerUseCase.execute({
             nome: "Felipe Jonathan",
             email: "felipe@fmail.com",
-            senha: "123456"
+            senha: "SenhaForte!123"
         })
+        let user = InMemoryUserRepository.data[0]
 
+        expect(InMemoryUserRepository.data).toHaveLength(1)
         expect(user).toHaveProperty('id')
-        expect(user.nome).toBe("Felipe Jonathan")
-        expect(user.email).toBe("felipe@fmail.com")
-        expect(bcryptAdapter.compare("123456", user.senha!)).toBeTruthy()
+        expect(user.nome.nome).toBe("Felipe Jonathan")
+        expect(user.email.address).toBe("felipe@fmail.com")
+        expect(bcryptAdapter.compare("SenhaForte!123", user.senha?.value!)).toBeTruthy()
     });
 
     it('Deve gerar erro ao tentar registar um usuário com email em uso', async () => {
@@ -33,14 +36,14 @@ describe('Casos de uso: Registrar usuário', () => {
             await registerUseCase.execute({
                 nome: "Felipe Jonathan",
                 email: "felipe@fmail.com",
-                senha: "123456"
+                senha: "SenhaForte!123"
             })
-        }).rejects.toThrowError("E-mail já cadastrado")
+        }).rejects.toThrowError("root.user-already-exists")
     })
 
     it('Deve gerar erro ao passar parâmetros insuficientes para criação do usuário', async () => {
         expect(async () => await registerUseCase.execute({} as any))
             .rejects
-            .toThrowError("Informações insuficientes para criação de um usuário")
+            .toThrowError("password.empty.weak")
     })
 })
