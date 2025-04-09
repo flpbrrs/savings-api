@@ -2,7 +2,7 @@ import CasoDeUso from "../../shared/model/CasoDeUso";
 import DataEncrypter from "../providers/DataEncrypter";
 import UserRepository from "../providers/UserRepository";
 import { TokenGenerator } from "../providers/TokenGenerator";
-import User, { UserProps } from "../model/user.entity";
+import { UserProps } from "../model/user.entity";
 import CoreError from "../../shared/model/CoreError.error";
 
 export type Input = {
@@ -25,7 +25,7 @@ export default class Login implements CasoDeUso<Input, Output> {
     async execute({ email, senha }: Input): Promise<Output> {
         const user = await this.repository.findByEmail(email)
 
-        if (!user || !this.encrypter.compare(senha, user.senha!))
+        if (!user || !this.encrypter.compare(senha, user.senha?.value!))
             throw new CoreError({ code: 'root.invalid-credentials' })
 
         const token = this.tokenGenerator.sign({
@@ -35,7 +35,7 @@ export default class Login implements CasoDeUso<Input, Output> {
         })
 
         return {
-            usuario: new User(user).withoutPassword,
+            usuario: user.withoutPassword,
             token
         }
     }

@@ -33,6 +33,6 @@ export default class RegistrarUsuario implements CasoDeUso<Input, void> {
         if (userAlreadyExists)
             throw new CoreError({ code: "root.user-already-exists" })
 
-        await this.repository.insert(newUser.props)
+        await this.repository.insert(newUser)
     }
 }
