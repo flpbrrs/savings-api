@@ -1,8 +1,7 @@
-import Resumo from "../model/Resumo";
-import Transacao from "../model/Transacao";
+import Transaction from "../model/transaction.entity"
 
 export default interface TransacaoRepository {
-    salvar(transacao: Transacao): Promise<void>
-    findByDate(userId: string, mes: number, ano: number): Promise<Transacao[]>
-    findById(transactionId: string): Promise<Transacao | null>
+    save(transacao: Transaction): Promise<void>
+    findByDate(userId: string, mes: number, ano: number): Promise<Transaction[]>
+    findById(transactionId: string): Promise<Transaction | null>
 }

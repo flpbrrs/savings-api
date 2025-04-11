@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
     "email": "felipe@fmail.com",
-    "senha": "123456"
+    "senha": "!Senha123"
 }
 
 ### Salvando token em uma variável
@@ -18,9 +18,9 @@ POST {{BASE_URL}}/register
 Content-Type: application/json
 
 {
-    "nome": "Felipe Jonathan",
-    "email": "felipe@fmail.com",
-    "senha": "123456"
+    "nome": "Felipe Barros",
+    "email": "felipe2@fmail.com",
+    "senha": "!Senha123"
 }
 
 ### me
@@ -41,12 +41,12 @@ Content-Type: application/json
 }
 
 ### Atualizar transacao
-PUT {{BASE_URL}}/transaction/710a380b-2403-48ec-8feb-df8d07c12d89
+PUT {{BASE_URL}}/transaction/90ac199b-a2a0-4012-88c3-1d27aa5de2db
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "titulo": "Pagar internet",
+    "titulo": "TESSSSTE",
     "descricao": "Contas",
     "valor": 120.91,
     "data": "2025-03-11",

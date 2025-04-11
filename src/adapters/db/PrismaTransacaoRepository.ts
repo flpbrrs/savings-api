@@ -1,33 +1,35 @@
-import { PrismaClient, Transaction } from "@prisma/client";
-import Resumo from "../../core/transacao/model/Resumo";
-import Transacao from "../../core/transacao/model/Transacao";
+import { PrismaClient, Transaction as TransactionDb } from "@prisma/client";
 import TransacaoRepository from "../../core/transacao/providers/transacaoRepository";
+import Transaction from "../../core/transacao/model/transaction.entity";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export default class PrismaTransacaoRepository implements TransacaoRepository {
     private readonly prisma = new PrismaClient()
 
-    async salvar(transacao: Transacao): Promise<void> {
+    async save(transaction: Transaction): Promise<void> {
         await this.prisma.transaction.upsert({
             where: {
-                id: transacao.id,
-                userId: transacao.userId,
+                id: transaction.id.value,
+                userId: transaction.owner.value,
             },
-            update: this.fromTransacao(transacao),
-            create: this.fromTransacao(transacao)
+            update: this.toDbModel(transaction),
+            create: this.toDbModel(transaction)
         })
     }
 
-    async findById(transactionId: string): Promise<Transacao | null> {
+    async findById(transactionId: string): Promise<Transaction | null> {
         const transacao = await this.prisma.transaction.findUnique({
-            where: {
-                id: transactionId
-            }
+            where: { id: transactionId }
         })
 
-        return transacao ? this.toTransacao(transacao) : null
+        return transacao ? this.fromDbModel(transacao) : null
     }
 
-    async findByDate(userId: string, mes: number, ano: number): Promise<Transacao[]> {
+    async findByDate(
+        userId: string,
+        mes: number,
+        ano: number
+    ): Promise<Transaction[]> {
         const startDate = new Date(ano, mes - 1, 1)
         const endDate = new Date(ano, mes, 1)
 
@@ -41,20 +43,26 @@ export default class PrismaTransacaoRepository implements TransacaoRepository {
             },
         })
 
-        return records.map(this.toTransacao)
+        return records.map(this.fromDbModel)
     }
 
-    private fromTransacao(transacao: Transacao) {
+    private toDbModel(transaction: Transaction) {
         return {
-            ...transacao,
-            data: new Date(transacao.data).toISOString()
+            titulo: transaction.props.titulo!,
+            descricao: transaction.props.descricao!,
+            data: new Date(transaction.props.data!),
+            tipo: transaction.props.tipo!,
+            valor: new Decimal(transaction.props.valor!),
+            userId: transaction.props.owner!
         }
     }
 
-    private toTransacao(transacao: Transaction): Transacao {
-        return {
-            ...transacao,
-            valor: Number(transacao.valor),
-        }
+    private fromDbModel(transaction: TransactionDb): Transaction {
+        return new Transaction({
+            ...transaction,
+            valor: Number(transaction.valor),
+            data: transaction.data.toISOString(),
+            owner: transaction.userId
+        })
     }
 }
