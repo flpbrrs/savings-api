@@ -23,7 +23,7 @@ export default class SalvarTransacao implements CasoDeUso<TransactionProps, void
         await this.repository.save(new Transaction({
             ...dto,
             owner: usuario!.id,
-            descricao: dto.descricao ?? "Outros"
+            descricao: dto.descricao ? dto.descricao : "Outros"
         }))
     }
 }
