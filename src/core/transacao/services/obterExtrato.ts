@@ -1,7 +1,7 @@
 import { User } from "../../auth/model/User";
 import CasoDeUso from "../../shared/model/CasoDeUso";
 import Extrato from "../model/Extrato";
-import Transacao from "../model/Transacao";
+import { TransactionProps } from "../model/transaction.entity";
 import TransacaoRepository from "../providers/transacaoRepository";
 
 type Entrada = {
@@ -13,11 +13,8 @@ type Saida = {
     total: number,
     income: number,
     expense: number,
-    analysis: {
-        label: string,
-        total: number
-    }[],
-    transacoes: Transacao[]
+    analysis: { name: string, [key: string]: number | string }[],
+    transacoes: TransactionProps[]
 }
 
 export default class ObterExtrato implements CasoDeUso<Entrada, Saida> {

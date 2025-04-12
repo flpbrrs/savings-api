@@ -1,8 +1,8 @@
-import Transacao from "./Transacao";
+import Transaction from "./transaction.entity";
 
 export default class Extrato {
     constructor(
-        private readonly transacoes: Transacao[]
+        private readonly transacoes: Transaction[]
     ) { }
 
     get toDto() {
@@ -11,7 +11,7 @@ export default class Extrato {
             income: this.incomes,
             expense: this.expenses,
             analysis: this.analysis,
-            transacoes: this.transacoes
+            transacoes: this.transacoes.map(t => t.props)
         }
     }
 
@@ -21,30 +21,32 @@ export default class Extrato {
 
     get incomes(): number {
         return this.transacoes
-            .filter(transacao => transacao.tipo === 'income')
+            .filter(transacao => transacao.tipo.type === 'income')
             .reduce(this.totalize, 0)
     }
 
     get expenses(): number {
         return this.transacoes
-            .filter(transacao => transacao.tipo === 'expense')
+            .filter(transacao => transacao.tipo.type === 'expense')
             .reduce(this.totalize, 0)
     }
 
-    get analysis(): { label: string, total: number }[] {
+    get analysis(): { name: string, [key: string]: number | string }[] {
         const partialAnalysis = this.transacoes
-            .filter(transacao => transacao.tipo === 'expense')
+            .filter(transacao => transacao.tipo.type === 'expense')
             .reduce((acc, item) => {
-                const label = item.descricao.toLowerCase();
-                acc[label] = (acc[label] || 0) + item.valor;
+                const label = item.descricao.value!.toLowerCase();
+                acc[label] = (acc[label] || 0) + item.valor.value!;
                 return acc;
             }, {} as Record<string, number>);
 
-        return Object.entries(partialAnalysis)
-            .map(([label, value]) => ({ label, total: value }))
+        return [{
+            name: "current",
+            ...partialAnalysis
+        }];
     }
 
-    private totalize(total: number, transacao: Transacao): number {
-        return total + transacao.valor
+    private totalize(total: number, transacao: Transaction): number {
+        return total + transacao.valor.value!
     }
 }
