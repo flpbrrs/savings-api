@@ -3,6 +3,7 @@ import BcryptDataEncrypter from "./adapters/auth/BcryptDataEncrypter";
 import JWTTokenGenerator from "./adapters/auth/JWTTokenGenerator";
 import PrismaTransacaoRepository from "./adapters/db/PrismaTransacaoRepository";
 import PrismaUserRepository from "./adapters/db/PrismaUserRepository";
+import CoreFacade from "./adapters/facade/core.facade";
 import AuthMiddleware from "./controllers/auth/auth.middleware";
 import { loginController } from "./controllers/auth/loginController";
 import { ObterUsuarioAutenticadoController } from "./controllers/auth/obterUsuarioAtenticadoController";
@@ -11,7 +12,6 @@ import obterExtratoController from "./controllers/transaction/obterExtratoContro
 import { salvarTransacaoController } from "./controllers/transaction/salvarTransacaoController";
 import Login from "./core/auth/services/login.use-case";
 import RegistrarUsuario from "./core/auth/services/registrar-usuario.use-case";
-import ObterExtrato from "./core/transacao/services/obterExtrato";
 import SalvarTransacao from "./core/transacao/services/salvarTransacao";
 
 (async () => {
@@ -23,7 +23,8 @@ import SalvarTransacao from "./core/transacao/services/salvarTransacao";
     const RegistrarUsuárioUseCase = new RegistrarUsuario(userRepository, dataEncrypter)
     const loginUsuarioUserCase = new Login(userRepository, dataEncrypter, jwtProvider)
     const salvarTransacaoUseCase = new SalvarTransacao(transacaoRepository)
-    const obterExtratoUseCase = new ObterExtrato(transacaoRepository)
+
+    const coreFacade = new CoreFacade()
 
     const authMiddleware = AuthMiddleware(userRepository, jwtProvider)
 
@@ -32,5 +33,5 @@ import SalvarTransacao from "./core/transacao/services/salvarTransacao";
     new ObterUsuarioAutenticadoController(app, authMiddleware)
 
     new salvarTransacaoController(app, salvarTransacaoUseCase, authMiddleware)
-    new obterExtratoController(app, obterExtratoUseCase, authMiddleware)
+    new obterExtratoController(app, coreFacade, authMiddleware)
 })()
